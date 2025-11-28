@@ -2,6 +2,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 import { SunIcon, MoonIcon, Bars3Icon, XMarkIcon, BellIcon } from '@heroicons/react/24/outline';
+import { HeartPulse } from 'lucide-react';
 import { useState } from 'react';
 
 export const Navbar = () => {
@@ -28,11 +29,13 @@ export const Navbar = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2">
-            <div className="w-10 h-10 bg-gradient-to-br from-medical-600 to-medical-400 rounded-lg flex items-center justify-center">
-              <span className="text-white font-bold text-xl">H</span>
+          <Link to="/" className="flex items-center space-x-2 group">
+            <div className="w-10 h-10 bg-gradient-to-br from-medical-600 to-medical-400 rounded-xl flex items-center justify-center shadow-lg shadow-medical-500/30 group-hover:scale-105 transition-transform duration-300">
+              <HeartPulse className="h-6 w-6 text-white" />
             </div>
-            <span className="text-xl font-bold text-gradient">HealthCare</span>
+            <span className="text-xl font-bold text-secondary-900 dark:text-white tracking-tight">
+              Health<span className="text-medical-600">Care</span>
+            </span>
           </Link>
 
           {/* Desktop Navigation */}

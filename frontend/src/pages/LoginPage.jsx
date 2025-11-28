@@ -82,14 +82,42 @@ export const LoginPage = () => {
             </p>
           </div>
 
-          {/* Demo Credentials */}
-          <div className="mt-8 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
-            <p className="text-sm font-medium text-blue-900 dark:text-blue-100 mb-2">Demo Credentials:</p>
-            <div className="text-xs text-blue-700 dark:text-blue-300 space-y-1">
-              <p><strong>Patient:</strong> john.doe@email.com / patient123</p>
-              <p><strong>Doctor:</strong> dr.sarah.johnson@healthcare.com / doctor123</p>
-              <p><strong>Admin:</strong> admin@healthcare.com / admin123</p>
+          {/* Demo Credentials & Quick Login */}
+          <div className="mt-8 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-xl border border-blue-100 dark:border-blue-800">
+            <p className="text-sm font-semibold text-blue-900 dark:text-blue-100 mb-3 flex items-center gap-2">
+              <span className="w-2 h-2 rounded-full bg-blue-500 animate-pulse"></span>
+              Quick Demo Login
+            </p>
+            <div className="grid grid-cols-3 gap-2">
+              <button
+                onClick={() => {
+                  setFormData({ email: 'john.doe@email.com', password: 'patient123' });
+                  // Optional: auto-submit after a short delay or let user click sign in
+                }}
+                className="px-3 py-2 text-xs font-medium bg-white dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 rounded-lg border border-blue-200 dark:border-blue-700 hover:bg-blue-50 dark:hover:bg-blue-800 transition-colors text-center"
+              >
+                Patient
+              </button>
+              <button
+                onClick={() => {
+                  setFormData({ email: 'dr.sarah.johnson@healthcare.com', password: 'doctor123' });
+                }}
+                className="px-3 py-2 text-xs font-medium bg-white dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 rounded-lg border border-blue-200 dark:border-blue-700 hover:bg-blue-50 dark:hover:bg-blue-800 transition-colors text-center"
+              >
+                Doctor
+              </button>
+              <button
+                onClick={() => {
+                  setFormData({ email: 'admin@healthcare.com', password: 'admin123' }); // Assuming admin123 based on pattern, or use known creds
+                }}
+                className="px-3 py-2 text-xs font-medium bg-white dark:bg-blue-900/40 text-blue-700 dark:text-blue-300 rounded-lg border border-blue-200 dark:border-blue-700 hover:bg-blue-50 dark:hover:bg-blue-800 transition-colors text-center"
+              >
+                Admin
+              </button>
             </div>
+            <p className="text-[10px] text-blue-600 dark:text-blue-400 mt-2 text-center">
+              Click a role to auto-fill credentials
+            </p>
           </div>
         </div>
 
