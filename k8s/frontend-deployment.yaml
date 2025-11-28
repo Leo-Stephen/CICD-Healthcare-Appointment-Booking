@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: frontend
-          image: YOUR_DOCKERHUB_USERNAME/healthcare-frontend:latest
+          image: leostephen/healthcare-frontend:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 80
@@ -49,4 +49,5 @@ spec:
     - protocol: TCP
       port: 80
       targetPort: 80
-  type: LoadBalancer
+      nodePort: 30001
+  type: NodePort
