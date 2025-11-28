@@ -1,0 +1,53 @@
+name: Frontend CI/CD
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "frontend/**"
+      - ".github/workflows/frontend-ci.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "frontend/**"
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        run: |
+          cd frontend
+          npm ci
+
+      - name: Build application
+        run: |
+          cd frontend
+          npm run build
+
+      - name: Log in to Docker Hub
+        if: github.event_name == 'push'
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKER_USERNAME }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: Build and push Docker image
+        if: github.event_name == 'push'
+        run: |
+          cd frontend
+          docker build -t ${{ secrets.DOCKER_USERNAME }}/healthcare-frontend:latest .
+          docker push ${{ secrets.DOCKER_USERNAME }}/healthcare-frontend:latest
+          docker tag ${{ secrets.DOCKER_USERNAME }}/healthcare-frontend:latest ${{ secrets.DOCKER_USERNAME }}/healthcare-frontend:${{ github.sha }}
+          docker push ${{ secrets.DOCKER_USERNAME }}/healthcare-frontend:${{ github.sha }}

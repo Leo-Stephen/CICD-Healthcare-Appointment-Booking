@@ -1,0 +1,111 @@
+---
+- name: Deploy Healthcare Appointment System to Kubernetes
+  hosts: localhost
+  connection: local
+  gather_facts: yes
+
+  vars:
+    k8s_namespace: default
+    docker_username: "{{ lookup('env', 'DOCKER_USERNAME') | default('your-dockerhub-username') }}"
+
+  tasks:
+    - name: Check if kubectl is installed
+      command: kubectl version --client
+      register: kubectl_check
+      changed_when: false
+      failed_when: false
+
+    - name: Fail if kubectl is not installed
+      fail:
+        msg: "kubectl is not installed. Please install kubectl first."
+      when: kubectl_check.rc != 0
+
+    - name: Create Kubernetes namespace (if not default)
+      kubernetes.core.k8s:
+        state: present
+        definition:
+          apiVersion: v1
+          kind: Namespace
+          metadata:
+            name: "{{ k8s_namespace }}"
+      when: k8s_namespace != "default"
+
+    - name: Apply Kubernetes secrets
+      kubernetes.core.k8s:
+        state: present
+        src: "{{ playbook_dir }}/../k8s/secrets.yaml"
+        namespace: "{{ k8s_namespace }}"
+
+    - name: Apply MySQL deployment
+      kubernetes.core.k8s:
+        state: present
+        src: "{{ playbook_dir }}/../k8s/mysql-deployment.yaml"
+        namespace: "{{ k8s_namespace }}"
+
+    - name: Wait for MySQL to be ready
+      kubernetes.core.k8s_info:
+        kind: StatefulSet
+        name: mysql
+        namespace: "{{ k8s_namespace }}"
+      register: mysql_status
+      until: mysql_status.resources[0].status.readyReplicas | default(0) >= 1
+      retries: 30
+      delay: 10
+
+    - name: Apply backend deployment
+      kubernetes.core.k8s:
+        state: present
+        src: "{{ playbook_dir }}/../k8s/backend-deployment.yaml"
+        namespace: "{{ k8s_namespace }}"
+
+    - name: Wait for backend to be ready
+      kubernetes.core.k8s_info:
+        kind: Deployment
+        name: backend
+        namespace: "{{ k8s_namespace }}"
+      register: backend_status
+      until: backend_status.resources[0].status.readyReplicas | default(0) >= 1
+      retries: 30
+      delay: 10
+
+    - name: Apply frontend deployment
+      kubernetes.core.k8s:
+        state: present
+        src: "{{ playbook_dir }}/../k8s/frontend-deployment.yaml"
+        namespace: "{{ k8s_namespace }}"
+
+    - name: Wait for frontend to be ready
+      kubernetes.core.k8s_info:
+        kind: Deployment
+        name: frontend
+        namespace: "{{ k8s_namespace }}"
+      register: frontend_status
+      until: frontend_status.resources[0].status.readyReplicas | default(0) >= 1
+      retries: 20
+      delay: 10
+
+    - name: Apply Ingress
+      kubernetes.core.k8s:
+        state: present
+        src: "{{ playbook_dir }}/../k8s/ingress.yaml"
+        namespace: "{{ k8s_namespace }}"
+
+    - name: Get all pods
+      kubernetes.core.k8s_info:
+        kind: Pod
+        namespace: "{{ k8s_namespace }}"
+      register: pods
+
+    - name: Display deployment status
+      debug:
+        msg:
+          - "Healthcare Appointment System deployed successfully!"
+          - "Namespace: {{ k8s_namespace }}"
+          - "Total Pods: {{ pods.resources | length }}"
+          - ""
+          - "To access the application:"
+          - "- Frontend: http://healthcare.local (add to /etc/hosts)"
+          - "- Backend API: http://healthcare.local/api"
+          - ""
+          - "To check pod status: kubectl get pods -n {{ k8s_namespace }}"
+          - "To check services: kubectl get svc -n {{ k8s_namespace }}"

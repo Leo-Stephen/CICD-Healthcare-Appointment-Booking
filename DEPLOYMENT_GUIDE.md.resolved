@@ -1,0 +1,106 @@
+# 🚀 Deployment Guide
+
+This guide covers the 3 main deployment strategies for the Healthcare Appointment System:
+1. **Docker Hub** (Build & Push)
+2. **Kubernetes** (Full-stack Deployment)
+3. **Ansible** (Automation)
+
+---
+
+## 1. Docker Hub Deployment (GitHub Actions)
+
+We have set up a GitHub Actions workflow to automatically build and push your Docker images to Docker Hub whenever you push to the `main` branch.
+
+### Prerequisites
+1. Create a [Docker Hub account](https://hub.docker.com/).
+2. Create two repositories:
+   - `healthcare-frontend`
+   - `healthcare-backend`
+
+### Setup Secrets in GitHub
+1. Go to your GitHub Repository → **Settings** → **Secrets and variables** → **Actions**.
+2. Click **New repository secret**.
+3. Add the following secrets:
+   - `DOCKERHUB_USERNAME`: Your Docker Hub username.
+   - `DOCKERHUB_TOKEN`: Your Docker Hub Access Token (Profile → Security → New Access Token).
+
+### Trigger Build
+Simply push your code to GitHub:
+```bash
+git add .
+git commit -m "Setup deployment pipeline"
+git push origin main
+```
+Go to the **Actions** tab in your GitHub repository to see the build progress.
+
+---
+
+## 2. Kubernetes Deployment
+
+Deploy the full stack to a local Kubernetes cluster (like Minikube or Docker Desktop).
+
+### Prerequisites
+- Kubernetes cluster running (Minikube or Docker Desktop)
+- `kubectl` installed
+
+### Step 1: Update Image Names
+Open [k8s/frontend-deployment.yaml](file:///Users/leostephen/Developer/last-health-medi/k8s/frontend-deployment.yaml) and [k8s/backend-deployment.yaml](file:///Users/leostephen/Developer/last-health-medi/k8s/backend-deployment.yaml).
+Replace `YOUR_DOCKERHUB_USERNAME` with your actual Docker Hub username.
+
+### Step 2: Apply Secrets
+Create the secrets for database and JWT:
+```bash
+kubectl apply -f k8s/secrets.yaml
+```
+
+### Step 3: Deploy Database
+```bash
+kubectl apply -f k8s/mysql-deployment.yaml
+```
+
+### Step 4: Deploy Backend
+```bash
+kubectl apply -f k8s/backend-deployment.yaml
+```
+
+### Step 5: Deploy Frontend & Ingress
+```bash
+kubectl apply -f k8s/frontend-deployment.yaml
+kubectl apply -f k8s/ingress.yaml
+```
+
+### Verify Deployment
+```bash
+kubectl get pods
+kubectl get services
+```
+
+---
+
+## 3. Ansible Automation
+
+Use Ansible to automate the Kubernetes deployment process.
+
+### Prerequisites
+- Ansible installed (`brew install ansible`)
+- `kubectl` configured
+
+### Run the Playbook
+Navigate to the ansible directory and run:
+```bash
+cd ansible
+ansible-playbook playbook.yml
+```
+
+This playbook will:
+1. Apply all Kubernetes manifests in the correct order.
+2. Wait for pods to be ready.
+3. Verify the deployment status.
+
+---
+
+## 🔍 Verification
+
+Once deployed, access your application:
+- **Frontend:** http://localhost (via Ingress/LoadBalancer)
+- **Backend API:** http://localhost/api (via Ingress)
