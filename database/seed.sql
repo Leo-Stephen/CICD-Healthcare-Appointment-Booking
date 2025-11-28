@@ -3,21 +3,21 @@
 
 -- Insert Admin User (password: admin123)
 INSERT INTO users (email, password, full_name, phone, role) VALUES
-('admin@healthcare.com', '$2a$10$8K1p/a0dL3.nwp0kEAOOEO7F2tD/qYYqM5F5xH3JqYy1XxJ0cZY3G', 'System Administrator', '+1-555-0001', 'ADMIN');
+('admin@healthcare.com', '$2a$10$ZWt0hmR/5pUeJvLi4g9pJ.UrBfHYcjg2Ssgj1zY.wFLzeR3MALfIm', 'System Administrator', '+1-555-0001', 'ADMIN');
 
 -- Insert Patient Users (password: patient123)
 INSERT INTO users (email, password, full_name, phone, role) VALUES
-('john.doe@email.com', '$2a$10$8K1p/a0dL3.nwp0kEAOOEO7F2tD/qYYqM5F5xH3JqYy1XxJ0cZY3G', 'John Doe', '+1-555-0101', 'PATIENT'),
-('jane.smith@email.com', '$2a$10$8K1p/a0dL3.nwp0kEAOOEO7F2tD/qYYqM5F5xH3JqYy1XxJ0cZY3G', 'Jane Smith', '+1-555-0102', 'PATIENT'),
-('mike.wilson@email.com', '$2a$10$8K1p/a0dL3.nwp0kEAOOEO7F2tD/qYYqM5F5xH3JqYy1XxJ0cZY3G', 'Mike Wilson', '+1-555-0103', 'PATIENT');
+('john.doe@email.com', '$2a$10$0f8Td4jADLK9JcwgH0au5eYvFSpAIN2msJM7QC4VciSO7lzlwRnkS', 'John Doe', '+1-555-0101', 'PATIENT'),
+('jane.smith@email.com', '$2a$10$0f8Td4jADLK9JcwgH0au5eYvFSpAIN2msJM7QC4VciSO7lzlwRnkS', 'Jane Smith', '+1-555-0102', 'PATIENT'),
+('mike.wilson@email.com', '$2a$10$0f8Td4jADLK9JcwgH0au5eYvFSpAIN2msJM7QC4VciSO7lzlwRnkS', 'Mike Wilson', '+1-555-0103', 'PATIENT');
 
 -- Insert Doctor Users (password: doctor123)
 INSERT INTO users (email, password, full_name, phone, role) VALUES
-('dr.sarah.johnson@healthcare.com', '$2a$10$8K1p/a0dL3.nwp0kEAOOEO7F2tD/qYYqM5F5xH3JqYy1XxJ0cZY3G', 'Dr. Sarah Johnson', '+1-555-0201', 'DOCTOR'),
-('dr.michael.chen@healthcare.com', '$2a$10$8K1p/a0dL3.nwp0kEAOOEO7F2tD/qYYqM5F5xH3JqYy1XxJ0cZY3G', 'Dr. Michael Chen', '+1-555-0202', 'DOCTOR'),
-('dr.emily.davis@healthcare.com', '$2a$10$8K1p/a0dL3.nwp0kEAOOEO7F2tD/qYYqM5F5xH3JqYy1XxJ0cZY3G', 'Dr. Emily Davis', '+1-555-0203', 'DOCTOR'),
-('dr.robert.martinez@healthcare.com', '$2a$10$8K1p/a0dL3.nwp0kEAOOEO7F2tD/qYYqM5F5xH3JqYy1XxJ0cZY3G', 'Dr. Robert Martinez', '+1-555-0204', 'DOCTOR'),
-('dr.lisa.anderson@healthcare.com', '$2a$10$8K1p/a0dL3.nwp0kEAOOEO7F2tD/qYYqM5F5xH3JqYy1XxJ0cZY3G', 'Dr. Lisa Anderson', '+1-555-0205', 'DOCTOR');
+('dr.sarah.johnson@healthcare.com', '$2a$10$8nLe5rNHLfE/bTAyY9nYlei0Uw94sQSrWXjWkrA29aF.8It.6p5Qu', 'Dr. Sarah Johnson', '+1-555-0201', 'DOCTOR'),
+('dr.michael.chen@healthcare.com', '$2a$10$8nLe5rNHLfE/bTAyY9nYlei0Uw94sQSrWXjWkrA29aF.8It.6p5Qu', 'Dr. Michael Chen', '+1-555-0202', 'DOCTOR'),
+('dr.emily.davis@healthcare.com', '$2a$10$8nLe5rNHLfE/bTAyY9nYlei0Uw94sQSrWXjWkrA29aF.8It.6p5Qu', 'Dr. Emily Davis', '+1-555-0203', 'DOCTOR'),
+('dr.robert.martinez@healthcare.com', '$2a$10$8nLe5rNHLfE/bTAyY9nYlei0Uw94sQSrWXjWkrA29aF.8It.6p5Qu', 'Dr. Robert Martinez', '+1-555-0204', 'DOCTOR'),
+('dr.lisa.anderson@healthcare.com', '$2a$10$8nLe5rNHLfE/bTAyY9nYlei0Uw94sQSrWXjWkrA29aF.8It.6p5Qu', 'Dr. Lisa Anderson', '+1-555-0205', 'DOCTOR');
 
 -- Insert Doctor Details
 INSERT INTO doctors (user_id, specialization, qualification, experience_years, consultation_fee, bio, rating, total_reviews) VALUES
@@ -95,6 +95,6 @@ INSERT INTO appointments (patient_id, doctor_id, appointment_date, appointment_t
 
 -- Sample Notifications
 INSERT INTO notifications (user_id, type, title, message, reference_id) VALUES
-(2, 'APPOINTMENT_APPROVED', 'Appointment Confirmed', 'Your appointment with Dr. Sarah Johnson has been approved for ' || DATE_FORMAT(DATE_ADD(CURDATE(), INTERVAL 3 DAY), '%Y-%m-%d') || ' at 10:00 AM', 1),
+(2, 'APPOINTMENT_APPROVED', 'Appointment Confirmed', CONCAT('Your appointment with Dr. Sarah Johnson has been approved for ', DATE_FORMAT(DATE_ADD(CURDATE(), INTERVAL 3 DAY), '%Y-%m-%d'), ' at 10:00 AM'), 1),
 (3, 'APPOINTMENT_PENDING', 'Appointment Requested', 'Your appointment request with Dr. Michael Chen is pending approval', 2),
-(5, 'NEW_APPOINTMENT_REQUEST', 'New Appointment Request', 'John Doe has requested an appointment on ' || DATE_FORMAT(DATE_ADD(CURDATE(), INTERVAL 3 DAY), '%Y-%m-%d') || ' at 10:00 AM', 1);
+(5, 'NEW_APPOINTMENT_REQUEST', 'New Appointment Request', CONCAT('John Doe has requested an appointment on ', DATE_FORMAT(DATE_ADD(CURDATE(), INTERVAL 3 DAY), '%Y-%m-%d'), ' at 10:00 AM'), 1);

@@ -4,7 +4,7 @@ import SockJS from 'sockjs-client';
 import toast from 'react-hot-toast';
 import { useAuth } from '../context/AuthContext';
 
-const WS_URL = import.meta.env.VITE_WS_URL || 'http://localhost:8080/api/ws';
+const WS_URL = import.meta.env.VITE_WS_URL || 'http://localhost:8081/api/ws';
 
 export const useWebSocket = () => {
   const { user } = useAuth();

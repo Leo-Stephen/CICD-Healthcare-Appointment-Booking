@@ -58,7 +58,7 @@ spec:
                 - ping
                 - -h
                 - localhost
-            initialDelaySeconds: 30
+            initialDelaySeconds: 90
             periodSeconds: 10
             timeoutSeconds: 5
           readinessProbe:
@@ -68,7 +68,7 @@ spec:
                 - ping
                 - -h
                 - localhost
-            initialDelaySeconds: 10
+            initialDelaySeconds: 60
             periodSeconds: 5
             timeoutSeconds: 1
       volumes:

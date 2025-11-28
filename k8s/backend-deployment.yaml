@@ -27,7 +27,7 @@ spec:
       containers:
         - name: backend
           image: leostephen/healthcare-backend:latest
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
           env:

@@ -2,11 +2,12 @@
 - name: Deploy Healthcare Appointment System to Kubernetes
   hosts: localhost
   connection: local
-  gather_facts: yes
+  gather_facts: true
 
   vars:
     k8s_namespace: default
     docker_username: "{{ lookup('env', 'DOCKER_USERNAME') | default('your-dockerhub-username') }}"
+    ansible_python_interpreter: "{{ ansible_playbook_python }}"
 
   tasks:
     - name: Check if kubectl is installed
@@ -104,8 +105,8 @@
           - "Total Pods: {{ pods.resources | length }}"
           - ""
           - "To access the application:"
-          - "- Frontend: http://healthcare.local (add to /etc/hosts)"
-          - "- Backend API: http://healthcare.local/api"
+          - "Run this command in a separate terminal to get the URL:"
+          - "  minikube service frontend"
           - ""
           - "To check pod status: kubectl get pods -n {{ k8s_namespace }}"
           - "To check services: kubectl get svc -n {{ k8s_namespace }}"
